@@ -76,3 +76,41 @@ Use RPC(such as Apache Thrift, JRPC， RestfulAPI)
 * notifyUser(user_id, sender_id, message_id, msg_preview)
   * Either used database or kafka
   * Exactly once if difficult, requiring two phase commit
+
+### Data model:
+* User table:
+  * ID, NAME, STATUS, timezone, team
+* Friend table:
+  * user_id_1, user_id_2, connected_date, last_view_date
+  * duplicated for a pair of friends
+  * last_view_date is used for "unread hightlight" feature.
+* Group membership table:
+  * group_id, user_id(shard_key ), join_date, role, last_view_date
+
+* Chanel table: (redis)
+  * 关注我们点进channel之后需要知道什么：
+    * 有几条未读信息？
+    * 最后一次看的信息需要置顶
+  * schema：
+    * key:user_id
+    * value: {unread_msg: last_msg_preview: timestamp:}
+
+* Message storage table (dynamoDB):
+  * 该table用于我们打开一个对话时，显示出这个chat的所有message
+  * 需求：
+    * 每个message是bind到一个对话或者groupchat上的，所以得有一个container_id
+    * 每个message还需要有一个message_id
+  * partition_key: containerId (such as group_id, or (user1_id + user2_id)
+  * sort_key: (this key is sorted, so pick a field which is sortable)timestamp
+  * msg_id
+  * sender_id
+  * message
+  * creation_timestamp
+  * expiry_time
+* Emoji reaction table (redis)
+  * key: msg_id
+  * value: map(user_id, emoji_id)
+
+
+* Side note:
+  * Kafka latency ~ 5ms (single datacenter)
