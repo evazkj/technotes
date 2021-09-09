@@ -1,3 +1,5 @@
+
+
 # System Design basics
 
 ### building blocks:
@@ -12,7 +14,7 @@
 ### System design principles:
 * reliablility
   * Netflix: chaos monkey
-![](images/iShot2021-01-28%2012.12.36.png)
+  ![](images/iShot2021-01-28%2012.12.36.png)
 * scalability
 * maintainability
 
