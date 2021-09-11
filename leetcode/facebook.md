@@ -260,3 +260,45 @@ Output: true
 
     
 
+### Remove Invalid Parentheses
+
+Given a string `s` that contains parentheses and letters, remove the minimum number of invalid parentheses to make the input string valid.
+
+Return *all the possible results*. You may return the answer in **any order**.
+
+ 
+
+**Example 1:**
+
+```
+Input: s = "()())()"
+Output: ["(())()","()()()"]
+```
+
+
+
+* 因为要最少的改动，所以应该想到bfs
+
+```python
+class Solution:
+    def removeInvalidParentheses(self, s: str) -> List[str]:
+        def is_valid(s):
+            cnt = 0
+            for c in s:
+                if c == "(":
+                    cnt += 1
+                elif c == ")":
+                    cnt -= 1
+                    if cnt < 0:
+                        return False
+            return cnt == 0
+        
+        level = {s}
+        while True:
+            valid = list(filter(is_valid, level))
+            if valid:
+                return valid
+            level = {x[:i] + x[i+1:] for x in level for i in range(len(x)) if x[i] in "()" } # 多个for循环，外层的写外面
+        retrun [""]
+```
+

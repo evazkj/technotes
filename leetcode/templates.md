@@ -79,3 +79,15 @@ while node or stack:
     ```
 
     
+
+## BFS
+
+1. ```python
+   level = [s]
+   while True:
+       valid = filter(is_valid, level)  # find out the valid candidates in current level
+       level = [f(ele) for ele in valid] # find from the valid set
+   ```
+
+2. 
+
